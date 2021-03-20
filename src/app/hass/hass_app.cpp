@@ -118,6 +118,12 @@ void hass_load_config( void ) {
             strlcpy( hass_config.topic, doc["hass"]["topic"], sizeof( hass_config.topic ) );
             hass_config.autoconnect = doc["hass"]["autoconnect"] | false;
             hass_config.widget = doc["hass"]["widget"] | false;
+
+//            doc["hass"]["sensor"][0]["topic"] = "Temperature";
+//            doc["hass"]["sensor"][0]["name"] = "homeassistant/sensor/sensorBedroom/state";
+//            doc["hass"]["sensor"][0]["unit"] = "°C";
+//            doc["hass"]["sensor"][0]["template"] = "{{ value_json.temperature}}";
+
         }        
         doc.clear();
     }
@@ -142,6 +148,17 @@ void hass_save_config( void ) {
         doc["hass"]["port"] = hass_config.port;
         doc["hass"]["autoconnect"] = hass_config.autoconnect;
         doc["hass"]["widget"] = hass_config.widget;
+        doc["hass"]["sensor"][0]["topic"] = "Temperature";
+        doc["hass"]["sensor"][0]["name"] = "homeassistant/sensor/sensorBedroom/state";
+        doc["hass"]["sensor"][0]["unit"] = "°C";
+        doc["hass"]["sensor"][0]["template"] = "{{ value_json.temperature}}";
+
+//        {	"device_class": "temperature",
+//        	"name": "Temperature",
+//			"state_topic": "homeassistant/sensor/sensorBedroom/state",
+//			"unit_of_measurement": "°C",
+//			"value_template": "{{ value_json.temperature}}"
+//        }
 
         if ( serializeJsonPretty( doc, file ) == 0) {
             log_e("Failed to write config file");

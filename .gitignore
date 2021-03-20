@@ -17,3 +17,4 @@ src/my-ttgo-watch.ino.cpp
 src/Makefile
 
 src/sloeber.ino.cpp
+/config/
