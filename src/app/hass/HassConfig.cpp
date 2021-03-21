@@ -1,3 +1,24 @@
+/****************************************************************************
+ *   2021-03-19
+ *   Copyright  2021  Henrik Olsson
+ *   Email: henols@gmail.com
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 #include <app/hass/HassConfig.h>
 #include "hardware/alloc.h"
 
@@ -68,11 +89,12 @@ bool HassConfig::onSave(JsonDocument &document) {
 	for (int i = 0; i < count; i++) {
 		log_i("Saving sensor: %s, pos: %d", sensors[i]->name, i);
 		JsonObject sensorRec = pagesArray.createNestedObject();
-		sensorRec["name"] = sensors[i]->name;
-		sensorRec["topic"] = sensors[i]->topic;
-		sensorRec["unit"] = sensors[i]->unit;
-		sensorRec["device_class"] = sensors[i]->device_class;
-		sensorRec["template"] = sensors[i]->value_template;
+		sensors[i]->saveTo(sensorRec);
+//		sensorRec["name"] = sensors[i]->name;
+//		sensorRec["topic"] = sensors[i]->topic;
+//		sensorRec["unit"] = sensors[i]->unit;
+//		sensorRec["device_class"] = sensors[i]->device_class;
+//		sensorRec["template"] = sensors[i]->value_template;
 	}
 	return JsonConfig::onSave(document);
 }
@@ -82,8 +104,8 @@ bool HassConfig::onLoad(JsonDocument &document) {
 
 	JsonArray sensors = document["sensors"].as<JsonArray>();
 	if (!sensors.isNull()) {
-		for (JsonVariant record : sensors) {
-			JsonObject configuration = record.as<JsonObject>();
+		for (JsonVariant sensorRec : sensors) {
+			JsonObject configuration = sensorRec.as<JsonObject>();
 			log_i("Loading sensor: %s", (const char* ) configuration["name"]);
 			auto sensor = add(configuration["name"]);
 			sensor->loadFrom(configuration);
