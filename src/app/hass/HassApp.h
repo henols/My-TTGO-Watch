@@ -22,18 +22,44 @@
 #ifndef _HASS_APP_H
 #define _HASS_APP_H
 
+#include <quickglui/app/application.h>
+
 #include <TTGO.h>
+#include <WiFi.h>
+#include <PubSubClient.h>
+#include "HassConfig.h"
+#include <PubSubClient.h>
+#include "hardware/wifictl.h"
+#include <lvgl/src/lv_misc/lv_task.h>
 
-//enum HassAppSettingsAction {
-//	Ignore, Load, Save
-//};
+class HassApp: public Application {
+public:
+	HassApp() {};
+	static void setup();
 
-struct HassSensor;
+	static bool wifictlEventCb(EventBits_t event, void *arg);
+	static void mqttCallback(char *topic, byte *payload, unsigned int length);
+	static void mainTask(lv_task_t *task);
 
-void HassApp_setup(void);
-bool HassApp_bluetooth_event_cb(EventBits_t event, void *arg);
-void HassApp_build_main(void);
-void HassApp_build_settings(void);
-//void execute_ir_cmd(HassSensor *config);
+public:
+	HassConfig config;
 
+protected:
+	void buildMain(void);
+	void buildSettings(void);
+
+protected:
+
+	String server;
+	String port;
+	bool ssl = false;
+	String user;
+	String password;
+	String topic;
+	bool autoconnect;
+	bool widget;
+
+	static HassApp app;
+
+};
 #endif // _HASS_APP_H

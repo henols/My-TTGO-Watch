@@ -105,7 +105,7 @@ void setup()
 //    crypto_ticker_setup();
 //    example_app_setup();
 //    osmand_app_setup();
-    HassApp_setup();
+    HassApp::setup();
     powermeter_app_setup();
     fxrates_app_setup();
     IRController_setup();
