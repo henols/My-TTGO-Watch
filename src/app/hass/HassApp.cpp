@@ -25,11 +25,13 @@
 #include <WiFi.h>
 
 #include "quickglui/quickglui.h"
+#include "quickglui/app/page.h"
 
 #include "gui/mainbar/mainbar.h"
 #include "hardware/wifictl.h"
 #include "gui/widget.h"
 
+#define CONFIG_PROP_PER_PAGE 5
 
 // App icon must have an size of 64x64 pixel with an alpha channel
 // Use https://lvgl.io/tools/imageconverter to convert your images and set "true color with alpha"
@@ -43,20 +45,28 @@ HassApp HassApp::app;
 
 void HassApp::setup(void) {
 	log_i("Starting Home Assisstant");
-	app.init("Home\nAssisstant", &hass_64px, 1, 3);
 
 	// Load config and build user interface
-	app.buildSettings();
+	app.setUpConfig();
+	int settingsPageCount = app.config.totalCount() / CONFIG_PROP_PER_PAGE + 1;
+
+	log_i("Setting page count: %d, total count: %d", settingsPageCount, app.config.totalCount());
+
+	app.useConfig(app.config, false);
+
+	app.init("Home\nAssisstant", &hass_64px, 1, settingsPageCount);
+
 
 	app.buildMain();
 
-	wifictl_register_cb(WIFICTL_CONNECT_IP | WIFICTL_OFF_REQUEST | WIFICTL_OFF | WIFICTL_DISCONNECT,
-			wifictlEventCb, "hass");
 
 	mainTaskHandle = lv_task_create(mainTask, 250, LV_TASK_PRIO_MID, NULL);
 
 	mqttClient.setCallback(mqttCallback);
 	mqttClient.setBufferSize(512);
+
+	wifictl_register_cb(WIFICTL_CONNECT_IP | WIFICTL_OFF_REQUEST | WIFICTL_OFF | WIFICTL_DISCONNECT, wifictlEventCb,
+			"hass");
 }
 
 void HassApp::buildMain(void) {
@@ -92,7 +102,58 @@ void HassApp::buildMain(void) {
 	lv_obj_invalidate(lv_scr_act());
 }
 
-void HassApp::buildSettings() {
+void HassApp::onBuildSettingsSubPage(int id, lv_obj_t *tile) {
+
+	int configStart = id * CONFIG_PROP_PER_PAGE;
+	int configEnd = configStart + CONFIG_PROP_PER_PAGE;
+
+	if (config.totalCount() - configStart < CONFIG_PROP_PER_PAGE) {
+		configEnd = config.totalCount();
+	}
+	log_i("config page %d, start %d, end %d, tot %d", id, configStart, configEnd, config.totalCount());
+
+	return;
+	auto settingsTile = mainbar_get_tile_obj(settingsTileId() + id);
+
+	Page page;
+	page.assign(settingsTile);
+
+	for (int i = configStart; i < configEnd; i++) {
+		auto item = config.getOption(i);
+
+		Widget line(page);
+		line.size(LV_HOR_RES, 38);
+
+		Label label(&line, item->name);
+		label.alignInParentLeftMid(5, 0);
+
+		switch (item->type()) {
+		case OptionDataType::BoolOption: {
+			auto option = (JsonBoolOption*) item;
+
+			Switch switcher(&line, false);
+			switcher.alignInParentRightMid(-5, 0);
+
+			// Option value will be updated on applyFromUI() call
+			option->assign(switcher);
+			break;
+		}
+		case OptionDataType::StringOption: {
+			auto option = (JsonStringOption*) item;
+
+			TextArea editor(&line, "");
+			editor.width(LV_HOR_RES / 2).alignInParentRightMid(-5, 0);
+
+			// Option value will be updated on applyFromUI() call
+			option->assign(editor);
+			break;
+		}
+		}
+	}
+
+}
+
+void HassApp::setUpConfig() {
 
 	log_i("Build settings");
 	// Create full options list and attach items to variables
@@ -114,10 +175,6 @@ void HassApp::buildSettings() {
 			Application::icon().unregisterDesktopWidget();
 		}
 	});
-
-	log_i("Use config");
-	Application::useConfig(config, false); // true - auto create settings page widgets
-	log_i("retrun");
 }
 
 template<typename T> T resolvePath(JsonVariantConst doc, String path) {

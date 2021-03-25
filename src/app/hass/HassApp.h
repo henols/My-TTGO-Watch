@@ -46,7 +46,8 @@ public:
 
 protected:
 	void buildMain(void);
-	void buildSettings(void);
+	void setUpConfig(void);
+	virtual void onBuildSettingsSubPage(int id, lv_obj_t* tile);
 
 protected:
 
