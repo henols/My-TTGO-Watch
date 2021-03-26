@@ -22,12 +22,12 @@
 #ifndef _HASS_APP_H
 #define _HASS_APP_H
 
+#include <app/hass/hass_settings.h>
 #include <quickglui/app/application.h>
 
 #include <TTGO.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
-#include "HassConfig.h"
 #include <PubSubClient.h>
 #include "hardware/wifictl.h"
 #include <lvgl/src/lv_misc/lv_task.h>
@@ -42,7 +42,7 @@ public:
 	static void mainTask(lv_task_t *task);
 
 public:
-	HassConfig config;
+	HassSettings config;
 
 protected:
 	void buildMain(void);

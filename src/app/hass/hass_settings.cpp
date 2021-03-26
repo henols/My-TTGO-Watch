@@ -19,17 +19,17 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-#include <app/hass/HassConfig.h>
+#include <app/hass/hass_settings.h>
 #include "hardware/alloc.h"
 
-HassConfig::HassConfig() :
+HassSettings::HassSettings() :
 		JsonConfig("home-assisstant.json") {
 	count = 0;
 	// This file is too big for that!
 	prettyJson = false;
 }
 
-HassSensor* HassConfig::add(const char *name) {
+HassSensor* HassSettings::add(const char *name) {
 	HassSensor *sensor = get(name);
 	if (sensor == nullptr) {
 		log_i("Adding sensor at %d by name: %s", count, name);
@@ -42,7 +42,7 @@ HassSensor* HassConfig::add(const char *name) {
 	return sensor;
 }
 
-void HassConfig::del(const char *name) {
+void HassSettings::del(const char *name) {
 	log_i("Deleting sensor by name: %s", name);
 	bool found = false;
 	for (int i = 0; i < count; i++) {
@@ -62,7 +62,7 @@ void HassConfig::del(const char *name) {
 		count--;
 }
 
-HassSensor* HassConfig::get(const char *name) {
+HassSensor* HassSettings::get(const char *name) {
 	log_i("Get sensor by name: %s", name);
 	for (int i = 0; i < count; i++) {
 		if (strcmp(sensors[i]->name.c_str(), name) == 0) {
@@ -72,7 +72,7 @@ HassSensor* HassConfig::get(const char *name) {
 	return nullptr;
 }
 
-HassSensor* HassConfig::getByTopic(const char *topic) {
+HassSensor* HassSettings::getByTopic(const char *topic) {
 	log_i("Get sensor by topic: %s", topic);
 	for (int i = 0; i < count; i++) {
 		if (strcmp(sensors[i]->topic.c_str(), topic) == 0) {
@@ -82,7 +82,7 @@ HassSensor* HassConfig::getByTopic(const char *topic) {
 	return nullptr;
 }
 
-bool HassConfig::onSave(JsonDocument &document) {
+bool HassSettings::onSave(JsonDocument &document) {
 
 	log_i("Saving config, sensors: %d", count);
 	auto pagesArray = document.createNestedArray("sensors");
@@ -99,7 +99,7 @@ bool HassConfig::onSave(JsonDocument &document) {
 	return JsonConfig::onSave(document);
 }
 
-bool HassConfig::onLoad(JsonDocument &document) {
+bool HassSettings::onLoad(JsonDocument &document) {
 	log_i("onLoad this");
 
 	JsonArray sensors = document["sensors"].as<JsonArray>();

@@ -25,6 +25,8 @@
 #include "config.h"
 #include "hardware/alloc.h"
 #include "WString.h"
+#include "quickglui/widgets/label.h"
+#include "quickglui/common/jsonconfig.h"
 
 #define RAW_CODE_BUFER_SIZE sizeof(uint16_t)*120
 

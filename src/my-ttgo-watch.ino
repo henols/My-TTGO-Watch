@@ -21,6 +21,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+#include <app/hass/hass_app.h>
 #include "config.h"
 #include <Arduino.h>
 #include "esp_bt.h"
@@ -51,7 +52,6 @@
 #include "app/fx_rates/fx_rates.h"
 #include "app/activity/activity.h"
 #include "app/powermeter/powermeter_app.h"
-#include "app/hass/HassApp.h"
 #include "app/FindPhone/FindPhone.h"
 
 TTGOClass *ttgo = TTGOClass::getWatch();

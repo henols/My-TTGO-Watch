@@ -22,15 +22,16 @@
 #ifndef HASS_CONFIG_H
 #define HASS_CONFIG_H
 
+#include <app/hass/hass_sensor.h>
 #include "config.h"
 #include "quickglui/quickglui.h"
-#include "HassSensor.h"
+#include <quickglui/app/settings.h>
 
 #define MAX_IR_BUTTONS 16
 
-class HassConfig: public JsonConfig {
+class HassSettings: public JsonConfig {
 public:
-	HassConfig();
+	HassSettings();
 
 	HassSensor* add(const char *name);
 	void del(const char *name);
