@@ -23,7 +23,7 @@
 #define HASS_SENSOR_H
 
 #include "config.h"
-#include "hardware/alloc.h"
+#include "utils/alloc.h"
 #include "WString.h"
 #include "quickglui/widgets/label.h"
 #include "quickglui/common/jsonconfig.h"

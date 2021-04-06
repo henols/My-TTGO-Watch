@@ -20,7 +20,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 #include <app/hass/hass_settings.h>
-#include "hardware/alloc.h"
+#include "utils/alloc.h"
 
 HassSettings::HassSettings() :
 		JsonConfig("home-assisstant.json") {
