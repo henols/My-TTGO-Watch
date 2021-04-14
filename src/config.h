@@ -23,6 +23,10 @@
  */
 #ifndef _CONFIG_H 
 
+    #if !defined( LILYGO_WATCH_2020_V1 ) && !defined( LILYGO_WATCH_2020_V3 ) && !defined( LILYGO_WATCH_2020_V2 )
+        #error "no ttgo t-watch version defined"
+    #endif
+
     #define LILYGO_WATCH_LVGL                       /** @brief To use LVGL, you need to enable the macro LVGL */
     #define TWATCH_USE_PSRAM_ALLOC_LVGL             /** @brief enabled lillygo-lib to use PSRAM */ 
     /**
@@ -37,7 +41,7 @@
     /**
      * firmeware version string
      */
-    #define __FIRMWARE__            "2021040501"
+    #define __FIRMWARE__            "2021041301"
     /**
      * Allows to include config.h from C code
      */
