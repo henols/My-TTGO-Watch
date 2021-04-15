@@ -54,13 +54,14 @@
 #include "app/activity/activity.h"
 #include "app/powermeter/powermeter_app.h"
 #include "app/FindPhone/FindPhone.h"
+#include "app/gps_status/gps_status.h"
 
 TTGOClass *ttgo = TTGOClass::getWatch();
 
 void setup()
 {
     Serial.begin(115200);
-    Serial.printf("starting t-watch V1, version: " __FIRMWARE__ " core: %d\r\n", xPortGetCoreID() );
+    Serial.printf("starting t-watch %s, version: " __FIRMWARE__ " core: %d\r\n", WATCH_VERSION_NAME, xPortGetCoreID() );
     Serial.printf("Configure watchdog to 30s: %d\r\n", esp_task_wdt_init( 30, true ) );
 
     ttgo->begin();
@@ -102,17 +103,18 @@ void setup()
     weather_app_setup();
     stopwatch_app_setup();
     alarm_clock_setup();
-    corona_app_detector_setup();
     activity_app_setup();
-//    crypto_ticker_setup();
-//    example_app_setup();
-//    osmand_app_setup();
+    gps_status_setup();
+    crypto_ticker_setup();
+    example_app_setup();
+    osmand_app_setup();
     HassApp::setup();
-    powermeter_app_setup();
-    fxrates_app_setup();
     IRController_setup();
-//	FindPhone_setup();
-  	/*
+    fxrates_app_setup();
+    corona_app_detector_setup();
+    powermeter_app_setup();
+	FindPhone_setup();
+    /*
      * post init: setup wifi, blectl and sound
      */
     if ( wifictl_get_autoon() && ( pmu_is_charging() || pmu_is_vbus_plug() || ( pmu_get_battery_voltage() > 3400) ) ) {
