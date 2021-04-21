@@ -18,3 +18,5 @@ src/Makefile
 
 src/sloeber.ino.cpp
 /config/
+
+upload.sh

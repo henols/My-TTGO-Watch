@@ -30,6 +30,7 @@
 #include "gui/mainbar/mainbar.h"
 #include "hardware/wifictl.h"
 #include "gui/widget.h"
+#include "gui/widget_styles.h"
 
 #define CONFIG_PROP_PER_PAGE 5
 
@@ -79,7 +80,7 @@ void HassApp::buildMain(void) {
 	// It also will auto-align child buttons on it:
 	Container &desk = main.createChildContainer(LV_LAYOUT_PRETTY_MID);
 
-	hassDeskStyle = Style::Create(mainbar_get_style(), true);
+	hassDeskStyle = Style::Create(ws_get_mainbar_style(), true);
 	hassDeskStyle.paddingInner(config.defSpacing);
 	hassDeskStyle.padding(7, 16, 7, 16);
 	desk.style(hassDeskStyle);
